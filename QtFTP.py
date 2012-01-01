@@ -1,34 +1,36 @@
-from qt import *
+from PyQt4 import QtCore, QtGui
 import os, sys
 
-class FTPOkno(QMainWindow):
-  
-  def __init__(self, *args):
-    apply(QMainWindow.__init__, (self,) + args)
-    self.hlavniWidget=QWidget(self)
-    self.vlayout=QVBoxLayout(self.hlavniWidget, 10, 5)
-    
-    self.lsv=QListView(self.hlavniWidget)
-    self.lsv.addColumn('Prvni sloupec')
-    self.lsv.setSelectionMode(QListView.Multi)
-    self.lsv.insertItem(QListViewItem(self.lsv, 'Jeden'))
-    self.lsv.insertItem(QListViewItem(self.lsv, 'Dva'))
-    self.lsv.insertItem(QListViewItem(self.lsv, 'Tri'))
-    
-    self.tlac=QPushButton('Stiskni', self.hlavniWidget)
-    
-    self.vlayout.addWidget(self.lsv)
-    self.vlayout.addWidget(self.tlac)
-    
-    QObject.connect(self.tlac, SIGNAL('clicked()'), self.lsv, SLOT('invertSelection()'))
-    self.setCentralWidget(self.hlavniWidget)
-    
-def main(args):
-  app=QApplication(args)
-  hl_okno=FTPOkno()
-  hl_okno.setWindowTitle('FTP prenos')
-  hl_okno.show()
-  app.connect(app, SIGNAL('lastWindowClosed()'), app, SLOT('quit()'))
-  app.exec_loop()
-if __name__=='__main__':
-  main(sys.argv)
+app = QtGui.QApplication(sys.argv)
+pts = '/cesta/k/adresari/pro/synchronizaci'
+
+MainWindow = QtGui.QMainWindow()
+MainWindow.setWindowTitle('IHMS')
+MainWidget=QtGui.QWidget(MainWindow)
+MainWindow.setCentralWidget(MainWidget)
+
+layout=QtGui.QGridLayout(MainWidget)
+
+
+path_to_syn = QtGui.QLineEdit(MainWidget)
+ftp_account = QtGui.QLineEdit(MainWidget)
+ftp_passwd = QtGui.QLineEdit(MainWidget)
+ftp_passwd.setEchoMode(QtGui.QLineEdit.Password)
+
+path_to_syn_txt = QtGui.QLabel(MainWidget)
+ftp_account_txt = QtGui.QLabel(MainWidget)
+ftp_passwd_txt = QtGui.QLabel(MainWidget)
+path_to_syn_txt.setText('Path to your directory: ')
+ftp_account_txt.setText('FTP: (pr.: myftp.com)')
+ftp_passwd_txt.setText('Password: ')
+
+
+layout.addWidget (path_to_syn_txt,0,0,QtCore.Qt.AlignLeft)
+layout.addWidget (path_to_syn,0,1,QtCore.Qt.AlignRight)
+layout.addWidget (ftp_account_txt,1,0,QtCore.Qt.AlignLeft)
+layout.addWidget (ftp_account,1,1,QtCore.Qt.AlignRight)
+layout.addWidget (ftp_passwd_txt,2,0,QtCore.Qt.AlignLeft)
+layout.addWidget (ftp_passwd,2,1,QtCore.Qt.AlignRight)
+
+MainWindow.show()
+sys.exit(app.exec_())
